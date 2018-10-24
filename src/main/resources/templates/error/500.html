@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="fragments::head('500 - Internal server error')"></head>
+<body>
+	<nav th:replace='fragments::menu'></nav>
+	
+	<h1 th:text='#{err500Title}'></h1>
+	
+	<div th:text='#{err500Text}'></div>
+</body>
+</html>

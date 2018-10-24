@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace='fragments::head(#{pageTitleEmployees})'></head>
+<body>
+	<nav th:replace='fragments::menu'></nav>
+	
+	<div th:if='${employee != null}'>
+		<dl>
+			<dt th:text='#{employeeFirstName}'></dt>
+			<dd th:text='${employee.firstName}'></dd>
+		</dl>
+	</div>
+</body>
+</html>

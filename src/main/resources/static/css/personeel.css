@@ -1,0 +1,10 @@
+@charset "ISO-8859-1";
+
+nav h1, nav ul {
+	float:left;
+}
+nav h1 {
+	font-size: 1.2em;
+	
+	font-weight: bold;
+}

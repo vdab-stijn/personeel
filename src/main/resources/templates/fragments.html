@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head th:fragment='head(title)'>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		
+		<link rel="icon" th:href='@{/images/personeel.ico}' type="image/x-icon">
+		<link rel="stylesheet" th:href='@{/css/personeel.css}' type="text/css">
+		
+		<title th:text='${title}'></title>
+	</head>
+<body>
+	<nav th:fragment='menu' class="menu">
+		<h1 th:text='#{menu}'></h1>
+		<ul>
+			<li><a th:href='@{/employees}' th:text='#{organisationChart}'></a></li>
+			<li><a th:href='@{/titles}' th:text='#{jobTitles}'></a></li>
+		</ul>
+	</nav>
+</body>
+</html>
