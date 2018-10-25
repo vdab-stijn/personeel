@@ -19,8 +19,9 @@ public class JobTitle {
 	@Column(name = "naam")
 	private String name;
 	
+	// Optimistic
 	@Version
-	@Column(name = "versie")
+	@Column(name = "versie", nullable = false)
 	private long version;
 	
 	protected JobTitle() {}
@@ -37,5 +38,9 @@ public class JobTitle {
 	}
 	public String getName() {
 		return name;
+	}
+	
+	public String toString() {
+		return getName();
 	}
 }

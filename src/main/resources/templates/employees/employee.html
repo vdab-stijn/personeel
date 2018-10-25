@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace='fragments::head(#{pageTitleEmployees})'></head>
+<body>
+	<nav th:replace='fragments::menu'></nav>
+	
+	<div th:if='${employee != null}'>
+		<dl>
+			<dt th:text='#{employeeFirstName}'></dt>
+			<dd th:text='${employee.firstName}'></dd>
+			<dt th:text='#{employeeLastName}'></dt>
+			<dd th:text='${employee.lastName}'></dd>
+			<dt th:text='#{employeeEmailAddress}'></dt>
+			<dd th:text='${employee.emailAddress}'></dd>
+			<dt th:text='#{employeeSalary}'></dt>
+			<dd th:text='${employee.salary}'></dd>
+			<dt th:text='#{employeeJobTitle}'></dt>
+			<dd th:text='${employee.jobTitle.name}'></dd>
+			<dt th:text='#{employeeBirthDate}'></dt>
+			<dd th:text='${employee.birthDate}'></dd>
+			<dt th:if='${employee.supervisor != null}' th:text='#{employeeSupervisor}'></dt>
+			<dd th:if='${employee.supervisor != null}'>
+				<a th:href='@{/employees/{id}(id=${employee.supervisor.id})}'>
+				<span th:text='${employee.supervisor.firstName}'></span>
+				<span th:text='${employee.supervisor.lastName}'></span></a>
+			</dd>
+			<dt th:text='#{employeeSubordinates}'></dt>
+			<dd th:each='subordinate : ${subordinates}'>
+			<a th:href='@{/employees/{id}(id=${subordinate.id})}'>
+				<span th:text='${subordinate.firstName}'></span>
+				<span th:text='${subordinate.lastName}'></span></a>
+			</dd>
+			<dt th:text='#{employeePhoto}'></dt>
+			<dd><img th:src='@{/images/{id}.jpg(id=${employee.id})}'></dd>
+		</dl>
+		<span>
+			<a th:href='@{/employees/{id}/raise(id=${employee.id})}'><span th:text='#{employeeRaise}'></span></a>
+			<a th:href='@{/employees/{id}/ssn(id=${employee.id})}'><span th:text='#{employeeSocialSecurityNumber}'></span></a>
+		</span>
+	</div>
+</body>
+</html>

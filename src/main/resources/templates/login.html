@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace='fragments::head(title=#{pageTitleLogin})'></head>
+<body>
+	<nav th:replace='fragments::menu'></nav>
+	
+	<h1 th:text='#{pageTitleLogin}'></h1>
+	
+	<form th:action='@{/login}' method='post'>
+		<label th:text="#{loginUsername} + ':'"></label><input name='username' required autofocus>
+		<label th:text="#{loginPassword} + ':'"></label><input name='password' type='password' required>
+		<input type='submit' th:value='#{loginSubmit}'>
+	</form>
+	<div th:if='${param.error != null}' class='fout'>
+		<span th:text='#{wrongUsernamePassword}'></span>
+	</div>
+</body>
+</html>

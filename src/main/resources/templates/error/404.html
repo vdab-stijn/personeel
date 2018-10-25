@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="fragments::head('404 - Page not found')"></head>
+<body>
+	<nav th:replace='fragments::menu'></nav>
+	
+	<h1 th:text='#{err404Title}'></h1>
+	
+	<div th:text='#{err404Text}'></div>
+</body>
+</html>

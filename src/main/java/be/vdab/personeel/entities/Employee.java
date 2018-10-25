@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -48,6 +50,9 @@ import be.vdab.personeel.valueobjects.SocialSecurityNumber;
 @TypeDef(
 		name = SocialSecurityNumber.MAPPER_NAME,
 		typeClass = SocialSecurityNumber.class)
+@NamedEntityGraph(
+		name = Employee.WITH_SUPERVISOR,
+		attributeNodes = @NamedAttributeNode("supervisor"))
 public class Employee implements Serializable {
 
 	/** Implements Serializable */
@@ -55,6 +60,8 @@ public class Employee implements Serializable {
 	
 	// Selects the employee that has only subordinates, no superiors
 	public static final String HIGHEST_RANKING = "Employee.highestRanking";
+	// Fetch the supervisor as well.
+	public static final String WITH_SUPERVISOR = "Employee.withSupervisor";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,7 +94,7 @@ public class Employee implements Serializable {
 	
 	@NotNull
 	@PositiveOrZero
-	@NumberFormat(style = Style.NUMBER)
+	@NumberFormat(style = Style.CURRENCY)
 	@Digits(integer = 10, fraction = 2)
 	@Column(name = "salaris")
 	private BigDecimal salary;
@@ -106,8 +113,9 @@ public class Employee implements Serializable {
 	@Column(name = "rijksregisternr", columnDefinition = "bigint")
 	private SocialSecurityNumber socialSecurityNumber;
 	
+	// Optimistic
 	@Version
-	@Column(name = "versie")
+	@Column(name = "versie", nullable = false)
 	private long version;
 	
 	@OneToMany(mappedBy = "supervisor")
@@ -207,5 +215,17 @@ public class Employee implements Serializable {
 	
 	public Set<Employee> getSubordinates() {
 		return subordinates;
+	}
+	
+	public Employee raiseSalary(final BigDecimal augend) {
+		salary = salary.add(augend);
+		
+		return this;
+	}
+	
+	public Employee saveSSN(final SocialSecurityNumber socialSecurityNumber) {
+		this.socialSecurityNumber = socialSecurityNumber;
+		
+		return this;
 	}
 }

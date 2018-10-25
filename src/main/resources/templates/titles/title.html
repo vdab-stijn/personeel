@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace='fragments::head(#{pageTitleTitles})'></head>
+<body>
+	<nav th:replace='fragments::menu'></nav>
+	
+	<h1 th:text='#{jobTitles}'></h1>
+	
+	<div th:if='${titles != null && titles.size() != 0}' th:each='title : ${titles}'>
+		<a th:href='@{/titles/{id}(id=${title.id})}'><span th:text='${title.name}'></span></a>
+	</div>
+	
+	<div th:if='${title != null}'>
+		<h1 th:text='${title.name}'></h1>
+		
+		<ul th:if='${employees != null && employees.size() > 0}' th:each='employee : ${employees}'>
+			<li><a th:href='@{/employees/{id}(id=${employee.id})}'><span th:text="${employee.firstName} + ' ' + ${employee.lastName}"></span></a>
+		</ul>
+	</div>
+</body>
+</html>

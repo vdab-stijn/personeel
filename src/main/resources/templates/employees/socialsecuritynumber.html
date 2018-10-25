@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace='fragments::head(#{pageTitleSSN})'></head>
+<body>
+	<nav th:replace='fragments::menu'></nav>
+	
+	<h1 th:text="#{ssnOf} + ' ' + ${employee.firstName} + ' ' + ${employee.lastName}"></h1>
+	
+	<form th:action='@{/employees/{id}/ssn(id=${employee.id})}' th:object='${socialSecurityNumberForm}' method='post'>
+		<label th:text='#{ssn}'></label>
+		<input th:field='*{socialSecurityNumber}' required autofocus>
+		<input type='submit' th:value='#{ssnSubmit}'>
+	</form>
+</body>
+</html>

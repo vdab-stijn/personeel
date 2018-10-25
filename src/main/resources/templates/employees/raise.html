@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace='fragments::head(#{pageTitleRaise})'></head>
+<body>
+	<nav th:replace='fragments::menu'></nav>
+	
+	<h1 th:text="#{employeeRaiseFor} + ${employee.firstName} + ' ' + ${employee.lastName}"></h1>
+	
+	<dl>
+		<dt th:text='#{employeeRaiseCurrentSalary}'></dt>
+		<dd th:text='${employee.salary}'></dd>
+	</dl>
+	
+	<form th:action='@{/employees/{id}/raise(id=${employee.id})}' th:object='${employeeRaiseForm}' method='post'>
+		<input th:field='*{raise}' type='number' required autofocus min='1'>
+		<input type='submit' th:value='#{employeeRaiseRaise}' id='raiseSubmit'>
+	</form>
+	<script>
+		document.getElementById('raiseSubmit')
+			.addEventListener('submit', function() {
+			this.disabled = true;
+		});
+	</script>
+</body>
+</html>
