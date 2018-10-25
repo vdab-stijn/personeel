@@ -27,8 +27,6 @@ import javax.validation.constraints.PositiveOrZero;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
@@ -47,9 +45,9 @@ import be.vdab.personeel.valueobjects.SocialSecurityNumber;
 		name = Employee.HIGHEST_RANKING,
 		query = "SELECT e FROM Employee e WHERE e.supervisor IS NULL")
 */
-@TypeDef(
-		name = SocialSecurityNumber.MAPPER_NAME,
-		typeClass = SocialSecurityNumber.class)
+//@TypeDef(
+//		name = SocialSecurityNumber.MAPPER_NAME,
+//		typeClass = SocialSecurityNumber.class)
 @NamedEntityGraph(
 		name = Employee.WITH_SUPERVISOR,
 		attributeNodes = @NamedAttributeNode("supervisor"))
@@ -109,7 +107,8 @@ public class Employee implements Serializable {
 	private LocalDate birthDate;
 	
 	@SocialSecurityNumberConstraint
-	@Type(type = SocialSecurityNumber.MAPPER_NAME)
+	//@Type(type = SocialSecurityNumber.MAPPER_NAME)
+	//@Convert(converter = SocialSecurityNumberConverter.class)
 	@Column(name = "rijksregisternr", columnDefinition = "bigint")
 	private SocialSecurityNumber socialSecurityNumber;
 	

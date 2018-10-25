@@ -23,7 +23,7 @@ public class Auditing {
 	= LoggerFactory.getLogger(Auditing.class);
 	
 	@AfterReturning(
-			pointcut = "be.vdab.personeel.aop.PointcutExpressions.services()",
+			pointcut = "be.vdab.personeel.aop.PointcutExpressions.everything()",
 			returning = "returnValue")
 	public void writeAudit(
 			final JoinPoint joinPoint, final Object returnValue) {

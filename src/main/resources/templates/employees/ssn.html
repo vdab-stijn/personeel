@@ -6,9 +6,11 @@
 	
 	<h1 th:text="#{ssnOf} + ' ' + ${employee.firstName} + ' ' + ${employee.lastName}"></h1>
 	
-	<form th:action='@{/employees/{id}/ssn(id=${employee.id})}' th:object='${socialSecurityNumberForm}' method='post'>
+	<form th:action='@{/employees/{id}/ssn(id=${employee.id})}'
+		th:object='${socialSecurityNumberForm}' method='post'>
 		<label th:text='#{ssn}'></label>
-		<input th:field='*{socialSecurityNumber}' required autofocus>
+		<input id='ssn' name='socialSecurityNumber' required autofocus
+			th:value='${employee.socialSecurityNumber.toString()}'>
 		<input type='submit' th:value='#{ssnSubmit}'>
 	</form>
 </body>

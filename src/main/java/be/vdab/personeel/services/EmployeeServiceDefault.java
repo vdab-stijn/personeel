@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.persistence.LockModeType;
 
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,12 +48,14 @@ public class EmployeeServiceDefault implements EmployeeService {
 	}
 	
 	@Override
+	@Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
 	@Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
 	public void raiseSalary(final long employeeId, final BigDecimal raise) {
 		employeeRepository.save(read(employeeId).get().raiseSalary(raise));
 	}
 	
 	@Override
+	@Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
 	@Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
 	public void saveSSN(
 			final long employeeId, final SocialSecurityNumber number) {

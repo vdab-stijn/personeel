@@ -1,124 +1,131 @@
 package be.vdab.personeel.valueobjects;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
-import javax.persistence.Embeddable;
 import javax.persistence.Transient;
 
-import org.hibernate.type.AbstractSingleColumnStandardBasicType;
-import org.hibernate.type.descriptor.sql.BigIntTypeDescriptor;
+import org.slf4j.LoggerFactory;
+
+import be.vdab.personeel.entities.Employee;
 
 //https://vladmihalcea.com/how-to-map-java-and-sql-arrays-with-jpa-and-hibernate/
 //https://docs.jboss.org/hibernate/orm/5.3/javadocs/org/hibernate/type/descriptor/java/BigDecimalTypeDescriptor.html
 //https://docs.spring.io/spring/docs/3.2.0.RC1/reference/html/validation.html
-@Embeddable
-public class SocialSecurityNumber
-extends AbstractSingleColumnStandardBasicType<BigDecimal> {
+
+public class SocialSecurityNumber implements Serializable {
 
 	/** Implements Serializable */
 	private static final long serialVersionUID = -4635254872941040510L;
 	
-	public static final String MAPPER_NAME = "social-security-number";
-
 	@Transient
-	private int birthYear;
+	private final String[] parts = new String[5];
 	
 	@Transient
-	private int birthMonth;
-	
+	private static final int YEAR = 0;
 	@Transient
-	private int birthDay;
-	
+	private static final int MONTH = 1;
 	@Transient
-	private int birthCounter;
-	
+	private static final int DAY = 2;
 	@Transient
-	private int controlNumber;
+	private static final int COUNTER = 3;
+	@Transient
+	private static final int CONTROL = 4;
 	
-	protected SocialSecurityNumber() {
-		super(	BigIntTypeDescriptor.INSTANCE,
-				SocialSecurityNumberTypeDescriptor.INSTANCE);
-	}
+	protected SocialSecurityNumber() {}
 	
 	public SocialSecurityNumber(
 			final BigDecimal sqlBigInt) {
-		super(	BigIntTypeDescriptor.INSTANCE,
-				SocialSecurityNumberTypeDescriptor.INSTANCE);
+		final String number = sqlBigInt.toString();
 		
-		final String number = sqlBigInt.setScale(0).toString();
+		LoggerFactory.getLogger(SocialSecurityNumber.class).error("SQL: " + sqlBigInt);
+		LoggerFactory.getLogger(SocialSecurityNumber.class).error("JAVA: " + number);
 		
 		if (number.length() != 11)
 				throw new IllegalArgumentException(
-						"A social security number has 11 digits");
+						"A social security number has 11 digits (argument: " +
+								number + ")");
+		
+		final String year = number.substring(0, 2);
+		final String month = number.substring(2, 4);
+		final String day = number.substring(4, 6);
+		final String counter = number.substring(6, 9);
+		final String control = number.substring(9, 11);
 		
 		try {
-			birthYear = Integer.parseInt(number.substring(0, 2));
-			birthMonth = Integer.parseInt(number.substring(2, 4));
-			birthDay = Integer.parseInt(number.substring(4, 6));
-			birthCounter = Integer.parseInt(number.substring(6, 9));
-			controlNumber = Integer.parseInt(number.substring(9));
+			Integer.parseInt(year);
+			Integer.parseInt(month);
+			Integer.parseInt(day);
+			Integer.parseInt(counter);
+			Integer.parseInt(control);
 		}
 		catch (final NumberFormatException nfe) {
 			throw new IllegalArgumentException(
-					"A social security number consists of only digits");
+					"A social security number consists of only digits " +
+							"(argument: " + number + ")");
 		}
-	}
-	
-	public SocialSecurityNumber(
-			final int birthYear,
-			final int birthMonth,
-			final int birthDay,
-			final int birthCounter,
-			final int controlNumber) {
-		super(	BigIntTypeDescriptor.INSTANCE,
-				SocialSecurityNumberTypeDescriptor.INSTANCE);
 		
-		this.birthYear = birthYear;
-		this.birthMonth = birthMonth;
-		this.birthDay = birthDay;
-		this.birthCounter = birthCounter;
-		this.controlNumber = controlNumber;
+		parts[YEAR] = year;
+		parts[MONTH] = month;
+		parts[DAY] = day;
+		parts[COUNTER] = counter;
+		parts[CONTROL] = control;
 	}
 	
-	public int getBirthYear() {
-		return birthYear;
+	public int getBaseNumberForValidation() {
+		return getBaseNumberForValidation("");
 	}
-	public int getBirthMonth() {
-		return birthMonth;
-	}
-	public int getBirthDay() {
-		return birthDay;
-	}
-	public int getBirthCounter() {
-		return birthCounter;
-	}
-	public int getBaseNumber() {
-		return Integer.parseInt(
-				"" + birthYear + birthMonth + birthDay + birthCounter);
+	
+	public int getBaseNumberForValidation(final String prefixNumber) {
+		return Integer.parseInt(prefixNumber + 
+				parts[YEAR] + parts[MONTH] + parts[DAY] + parts[COUNTER]);
 	}
 	public int getControlNumber() {
-		return controlNumber;
-	}
-
-	@Override
-	public String getName() {
-		return MAPPER_NAME;
-	}
-	
-	@Override
-	protected boolean registerUnderJavaType() {
-		return true;
+		return Integer.parseInt(parts[CONTROL]);
 	}
 	
 	@Override
 	public String toString() {
-		return "" +
-				birthYear + birthMonth + birthDay +
-				birthCounter + controlNumber;
+		return 	parts[YEAR] +
+				parts[MONTH] +
+				parts[DAY] +
+				parts[COUNTER] +
+				parts[CONTROL];
 	}
 	
 	public BigDecimal toBigDecimal() {
 		return new BigDecimal(toString());
+	}
+	
+	private static final String REGEX
+	= "([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{3})([0-9]{2})";
+	private static final int MODULO = 97;
+	public final boolean validateFormat() {
+		return toString().matches(REGEX);
+	}
+	public boolean validate(final Employee employee) {
+		if (!validateFormat()) return false;
+		
+		final LocalDate date = employee.getBirthDate();
+		
+		int year = Integer.parseInt(parts[YEAR]);
+		int month = Integer.parseInt(parts[MONTH]);
+		int day = Integer.parseInt(parts[DAY]);
+		
+		if (date.getYear() < 2000)
+			if (Integer.parseInt("19" + year) != date.getYear()) return false;
+		
+		if (date.getYear() >= 2000)
+			if (Integer.parseInt("20" + year) != date.getYear()) return false;
+		
+		if (date.getMonthValue() != month) return false;
+		if (date.getDayOfMonth() != day) return false;
+		
+
+		return getControlNumber()
+				== MODULO - (getBaseNumberForValidation(
+						date.getYear() >= 2000 ? "2" : "") % MODULO);
 	}
 	
 	@Override
@@ -129,16 +136,11 @@ extends AbstractSingleColumnStandardBasicType<BigDecimal> {
 		
 		final SocialSecurityNumber number = (SocialSecurityNumber)object;
 		
-		return	birthYear == number.birthYear &&
-				birthMonth == number.birthMonth &&
-				birthDay == number.birthDay &&
-				birthCounter == number.birthCounter &&
-				controlNumber == number.controlNumber;
+		return	parts.equals(number.parts);
 	}
 	
 	@Override
 	public int hashCode() {
-		return (int)(37 * (	birthYear + birthMonth + birthDay +
-							birthCounter + controlNumber));
+		return (int)(37 * getBaseNumberForValidation());
 	}
 }

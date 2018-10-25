@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,9 @@ import be.vdab.personeel.web.forms.SocialSecurityNumberForm;
 @RequestMapping("employees")
 public class EmployeeController {
 
+	private static final Logger LOGGER
+	= LoggerFactory.getLogger(EmployeeController.class);
+	
 	private final EmployeeService employeeService;
 	
 	public EmployeeController(final EmployeeService employeeService) {
@@ -83,7 +88,7 @@ public class EmployeeController {
 	}
 	
 	private static final String VIEW_SSN
-	= "employees/socialsecuritynumber";
+	= "employees/ssn";
 	@GetMapping("{id}/ssn")
 	public ModelAndView showSSN(@PathVariable final long id) {
 		return new ModelAndView(VIEW_SSN)
@@ -99,12 +104,15 @@ public class EmployeeController {
 			@Valid final SocialSecurityNumberForm form,
 			final BindingResult bindingResult,
 			final RedirectAttributes redirectAttributes) {
-		if (bindingResult.hasErrors() )
+		redirectAttributes.addAttribute("id", id);
+		
+		if (bindingResult.hasErrors()) {
+			LOGGER.error("SSN form has binding errors");
+			
 			return REDIRECT_AFTER_SAVE_SSN;
+		}
 		
 		employeeService.saveSSN(id, form.getSocialSecurityNumber());
-		
-		redirectAttributes.addAttribute("id", id);
 		
 		return REDIRECT_AFTER_SAVE_SSN;
 	}
