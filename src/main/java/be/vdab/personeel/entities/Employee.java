@@ -109,7 +109,7 @@ public class Employee implements Serializable {
 	@SocialSecurityNumberConstraint
 	//@Type(type = SocialSecurityNumber.MAPPER_NAME)
 	//@Convert(converter = SocialSecurityNumberConverter.class)
-	@Column(name = "rijksregisternr", columnDefinition = "bigint")
+	@Column(name = "rijksregisternr")
 	private SocialSecurityNumber socialSecurityNumber;
 	
 	// Optimistic

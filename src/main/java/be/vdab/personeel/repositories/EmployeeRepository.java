@@ -16,6 +16,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>{
 	
 	//@Query(Employee.HIGHEST_RANKING)
 	public Optional<Employee> findBySupervisorIsNull();
+	public Optional<Employee> findByEmailAddress(final String emailAddress);
 	
 	public List<Employee> findAllBySupervisor(final Employee supervisor);
 	

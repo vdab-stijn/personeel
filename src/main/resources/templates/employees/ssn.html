@@ -6,12 +6,20 @@
 	
 	<h1 th:text="#{ssnOf} + ' ' + ${employee.firstName} + ' ' + ${employee.lastName}"></h1>
 	
-	<form th:action='@{/employees/{id}/ssn(id=${employee.id})}'
-		th:object='${socialSecurityNumberForm}' method='post'>
-		<label th:text='#{ssn}'></label>
-		<input id='ssn' name='socialSecurityNumber' required autofocus
-			th:value='${employee.socialSecurityNumber.toString()}'>
+	<form th:action='@{/employees/{id}/ssn(id=${employee.id})}' method='post'
+		th:object='${socialSecurityNumberForm}'>
+		<label><span th:text='#{ssn}'></span>
+		<span th:if="${#fields.hasErrors('socialSecurityNumber')}" class='error'
+			th:errors='*{socialSecurityNumber}'></span>
+		<input th:field='*{socialSecurityNumber}' required autofocus>
+		</label>
+		
+		<input th:field='*{employee}' type='hidden'>
+		
 		<input type='submit' th:value='#{ssnSubmit}'>
+		<div class="error" th:if="${#fields.hasErrors('*')}">
+			<p th:each="err : ${#fields.errors('*')}" th:text='${err}'></p>
+		</div>
 	</form>
 </body>
 </html>

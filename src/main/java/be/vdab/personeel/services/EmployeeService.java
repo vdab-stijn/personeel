@@ -13,6 +13,7 @@ public interface EmployeeService {
 	public Optional<Employee> read(final long employeeId);
 	
 	public Optional<Employee> findHighestRanking();
+	
 	public List<Employee> findSubordinates(final Employee supervisor);
 	public List<Employee> findByJobTitle(final JobTitle jobTitle);
 	

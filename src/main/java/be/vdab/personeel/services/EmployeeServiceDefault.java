@@ -27,22 +27,26 @@ public class EmployeeServiceDefault implements EmployeeService {
 	}
 	
 	@Override
+	@Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
 	public Optional<Employee> read(final long employeeId) {
 		return employeeRepository.findById(employeeId);
 	}
 	
 	@Override
+	@Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
 	public Optional<Employee> findHighestRanking() {
 		//return employeeRepository.findHighestRanking();
 		return employeeRepository.findBySupervisorIsNull();
 	}
 
 	@Override
+	@Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
 	public List<Employee> findSubordinates(final Employee supervisor) {
 		return employeeRepository.findAllBySupervisor(supervisor);
 	}
 	
 	@Override
+	@Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
 	public List<Employee> findByJobTitle(final JobTitle jobTitle) {
 		return employeeRepository.findAllByJobTitle(jobTitle);
 	}

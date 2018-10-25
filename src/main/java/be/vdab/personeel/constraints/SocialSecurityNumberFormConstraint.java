@@ -7,10 +7,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import javax.validation.Constraint;
 import javax.validation.Payload;
 
 @Retention(RUNTIME)
 @Target({ TYPE, ANNOTATION_TYPE })
+@Constraint(validatedBy = SocialSecurityNumberFormConstraintValidator.class)
 public @interface SocialSecurityNumberFormConstraint {
 	
 	String message() default

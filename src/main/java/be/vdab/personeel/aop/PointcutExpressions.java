@@ -15,12 +15,12 @@ public class PointcutExpressions {
 	@Pointcut("execution(* be.vdab.personeel.converters.*.*(..))")
 	public void conversions() {}
 	
-	@Pointcut("execution(* be.vdab.personeel.converters.*.*(..))")
+	@Pointcut("execution(* be.vdab.personeel.constraints.*.*(..))")
 	public void constraints() {}
 	
 	@Pointcut("execution(* be.vdab.personeel.services.*.*(..)) || " +
 				"execution(* be.vdab.personeel.web.*.*(..)) || " +
 				"execution(* be.vdab.personeel.converters.*.*(..))" +
-				"execution(* be.vdab.personeel.converters.*.*(..))")
+				"execution(* be.vdab.personeel.constraints.*.*(..))")
 	public void everything() {}
 }

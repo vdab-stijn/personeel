@@ -1,6 +1,5 @@
 package be.vdab.personeel.web.forms;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import be.vdab.personeel.constraints.SocialSecurityNumberConstraint;
@@ -17,15 +16,25 @@ public class SocialSecurityNumberForm {
 	@SocialSecurityNumberConstraint
 	private SocialSecurityNumber socialSecurityNumber;
 	
-	public void setSocialSecurityNumber(
-			@Valid final Employee employee,
+	public SocialSecurityNumberForm() {}
+	public SocialSecurityNumberForm(
+			final Employee employee,
 			final SocialSecurityNumber socialSecurityNumber) {
+		setEmployee(employee);
+		setSocialSecurityNumber(socialSecurityNumber);
+	}
+	
+	public void setEmployee(final Employee employee) {
 		this.employee = employee;
-		this.socialSecurityNumber = socialSecurityNumber;
 	}
 	
 	public Employee getEmployee() {
 		return employee;
+	}
+	
+	public void setSocialSecurityNumber(
+			final SocialSecurityNumber socialSecurityNumber) {
+		this.socialSecurityNumber = socialSecurityNumber;
 	}
 	
 	public SocialSecurityNumber getSocialSecurityNumber() {
