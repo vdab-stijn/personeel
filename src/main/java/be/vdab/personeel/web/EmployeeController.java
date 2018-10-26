@@ -19,6 +19,7 @@ import be.vdab.personeel.entities.Employee;
 import be.vdab.personeel.services.EmployeeService;
 import be.vdab.personeel.web.forms.EmployeeRaiseForm;
 import be.vdab.personeel.web.forms.SocialSecurityNumberForm;
+import be.vdab.personeel.web.session.EmployeeData;
 
 @Controller
 @RequestMapping("employees")
@@ -28,9 +29,13 @@ public class EmployeeController {
 	= LoggerFactory.getLogger(EmployeeController.class);
 	
 	private final EmployeeService employeeService;
+	private final EmployeeData employeeData;
 	
-	public EmployeeController(final EmployeeService employeeService) {
+	public EmployeeController(
+			final EmployeeService employeeService,
+			final EmployeeData employeeData) {
 		this.employeeService = employeeService;
+		this.employeeData = employeeData;
 	}
 	
 	private static final String VIEW_EMPLOYEE
@@ -87,10 +92,21 @@ public class EmployeeController {
 		return REDIRECT_AFTER_RAISE;
 	}
 	
+	private static final String REDIRECT_VIEW_SSN
+	= "redirect:/employees/ssn";
+	@GetMapping("{id}/ssn")
+	public String showSSN(@PathVariable final long id) {
+		employeeData.setEmployeeId(id);
+		
+		return REDIRECT_VIEW_SSN;
+	}
+	
 	private static final String VIEW_SSN
 	= "employees/ssn";
-	@GetMapping("{id}/ssn")
-	public ModelAndView showSSN(@PathVariable final long id) {
+	@GetMapping("/ssn")
+	public ModelAndView showSSN() {
+		final long id = employeeData.getEmployeeId();
+		
 		LOGGER.debug("=======================================================");
 		LOGGER.debug("VIEW: " + VIEW_SSN + " (PathVariable 'id': " + id + ")");
 		
@@ -109,7 +125,7 @@ public class EmployeeController {
 	private static final String REDIRECT_AFTER_SAVE_SSN
 	= "redirect:/employees/{id}";
 	private static final String REDIRECT_AFTER_SAVE_SSN_FAILS
-	= REDIRECT_AFTER_SAVE_SSN + "/ssn";
+	= "redirect:/employees/ssn";
 	//@PostMapping("{id}/ssn")
 	@PostMapping("/ssn")
 	public String saveSSN(
@@ -117,18 +133,17 @@ public class EmployeeController {
 			@Valid final SocialSecurityNumberForm form,
 			final BindingResult bindingResult,
 			final RedirectAttributes redirectAttributes) {
-		redirectAttributes.addAttribute(
-				"id", form.getEmployee().getId());
-		
 		if (bindingResult.hasErrors()) {
 			LOGGER.error("SSN form has binding errors:");
 			
 			bindingResult.getAllErrors().stream().forEach(e -> 
 				LOGGER.error(e.toString()));
 			
-			//return REDIRECT_AFTER_SAVE_SSN_FAILS;
-			return VIEW_SSN;
+			return REDIRECT_AFTER_SAVE_SSN_FAILS;
 		}
+		
+		redirectAttributes.addAttribute(
+				"id", form.getEmployee().getId());
 		
 		LOGGER.debug("SSN FORM: " +
 				form.getEmployee().getId() + " (" +
