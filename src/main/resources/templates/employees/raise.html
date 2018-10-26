@@ -4,7 +4,7 @@
 <body>
 	<nav th:replace='fragments::menu'></nav>
 	
-	<h1 th:text="#{employeeRaiseFor} + ${employee.firstName} + ' ' + ${employee.lastName}"></h1>
+	<h1 th:text="#{employeeRaiseFor} + ' ' + ${employee.firstName} + ' ' + ${employee.lastName}"></h1>
 	
 	<dl>
 		<dt th:text='#{employeeRaiseCurrentSalary}'></dt>

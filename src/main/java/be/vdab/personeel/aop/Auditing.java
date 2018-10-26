@@ -28,22 +28,22 @@ public class Auditing {
 	public void writeAudit(
 			final JoinPoint joinPoint, final Object returnValue) {
 		final StringBuilder builder
-		= new StringBuilder("TIME\t").append(LocalDateTime.now());
+		= new StringBuilder("\nTIME\t").append(LocalDateTime.now());
 		
 		final Authentication authentication
 		= SecurityContextHolder.getContext().getAuthentication();
 		
 		if (authentication != null)
-			builder.append("\nUser\t").append(authentication.getName());
+			builder.append("\nUSER\t").append(authentication.getName());
 		
-		builder.append("\nMethod\t")
+		builder.append("\nMETHOD\t")
 			.append(joinPoint.getSignature().toLongString());
 		
 		Arrays.stream(joinPoint.getArgs())
-			.forEach(object -> builder.append("\nParameter\t").append(object));
+			.forEach(object -> builder.append("\nPARAM\t").append(object));
 		
 		if (returnValue != null) {
-			builder.append("\nReturn\t");
+			builder.append("\nRETURN\t");
 			
 			if (returnValue instanceof Collection) {
 				final Collection<?> collection = (Collection<?>)returnValue;

@@ -91,6 +91,9 @@ public class EmployeeController {
 	= "employees/ssn";
 	@GetMapping("{id}/ssn")
 	public ModelAndView showSSN(@PathVariable final long id) {
+		LOGGER.debug("=======================================================");
+		LOGGER.debug("VIEW: " + VIEW_SSN + " (PathVariable 'id': " + id + ")");
+		
 		final ModelAndView modelAndView = new ModelAndView(VIEW_SSN);
 		
 		final Optional<Employee> employee = employeeService.read(id);
@@ -107,13 +110,15 @@ public class EmployeeController {
 	= "redirect:/employees/{id}";
 	private static final String REDIRECT_AFTER_SAVE_SSN_FAILS
 	= REDIRECT_AFTER_SAVE_SSN + "/ssn";
-	@PostMapping("{id}/ssn")
+	//@PostMapping("{id}/ssn")
+	@PostMapping("/ssn")
 	public String saveSSN(
-			@PathVariable final long id,
+			//@PathVariable final long id,
 			@Valid final SocialSecurityNumberForm form,
 			final BindingResult bindingResult,
 			final RedirectAttributes redirectAttributes) {
-		redirectAttributes.addAttribute("id", id);
+		redirectAttributes.addAttribute(
+				"id", form.getEmployee().getId());
 		
 		if (bindingResult.hasErrors()) {
 			LOGGER.error("SSN form has binding errors:");
@@ -121,14 +126,15 @@ public class EmployeeController {
 			bindingResult.getAllErrors().stream().forEach(e -> 
 				LOGGER.error(e.toString()));
 			
-			return REDIRECT_AFTER_SAVE_SSN_FAILS;
+			//return REDIRECT_AFTER_SAVE_SSN_FAILS;
+			return VIEW_SSN;
 		}
 		
 		LOGGER.debug("SSN FORM: " +
 				form.getEmployee().getId() + " (" +
 				form.getSocialSecurityNumber().toString() + ")");
 		
-		employeeService.saveSSN(id, form.getSocialSecurityNumber());
+		employeeService.saveSSN(form.getEmployee().getId(), form.getSocialSecurityNumber());
 		
 		return REDIRECT_AFTER_SAVE_SSN;
 	}

@@ -6,7 +6,9 @@
 	
 	<h1 th:text="#{ssnOf} + ' ' + ${employee.firstName} + ' ' + ${employee.lastName}"></h1>
 	
-	<form th:action='@{/employees/{id}/ssn(id=${employee.id})}' method='post'
+	<!-- <form th:action='@{/employees/{id}/ssn(id=${employee.id})}' method='post'
+		th:object='${socialSecurityNumberForm}'> -->
+	<form th:action='@{/employees/ssn}' method='post'
 		th:object='${socialSecurityNumberForm}'>
 		<label><span th:text='#{ssn}'></span>
 		<span th:if="${#fields.hasErrors('socialSecurityNumber')}" class='error'
@@ -17,7 +19,7 @@
 		<input th:field='*{employee}' type='hidden'>
 		
 		<input type='submit' th:value='#{ssnSubmit}'>
-		<div class="error" th:if="${#fields.hasErrors('*')}">
+		<div th:if="${#fields.hasErrors('*')}" class="error">
 			<p th:each="err : ${#fields.errors('*')}" th:text='${err}'></p>
 		</div>
 	</form>

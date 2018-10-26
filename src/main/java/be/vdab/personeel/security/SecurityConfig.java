@@ -75,6 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(final WebSecurity web) throws Exception {
 		web.ignoring()
+			.antMatchers("/resources/**", "/static/**")
 			.mvcMatchers("/images/**")
 			.mvcMatchers("/css/**")
 			.mvcMatchers("/js/**");
@@ -86,15 +87,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.loginPage("/login")
 			.and().logout()
 			.and().authorizeRequests()
+			.mvcMatchers("/employees/*/raise/**").hasAuthority(AUTH_PRESIDENT)
 			.mvcMatchers("/employees/**").authenticated()
-			.mvcMatchers("/employees/*/ssn").hasAuthority(AUTH_PRESIDENT)
-			.mvcMatchers("/**").permitAll();/*
-			.mvcMatchers("/tenders/add").hasAuthority(MANAGER)
-			.mvcMatchers("/employees")
-				.hasAnyAuthority(STOCKKEEPER, HELPDESK)
-			.mvcMatchers("/", "/branches/**", "/login").permitAll()
-			.mvcMatchers("/**").authenticated();*/
-		
-		http.httpBasic();
+			.mvcMatchers("/", "/titles/**", "/login", "/logout").permitAll()
+			.mvcMatchers("/**").authenticated();
 	}
 }

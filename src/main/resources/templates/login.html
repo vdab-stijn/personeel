@@ -11,8 +11,6 @@
 		<label th:text="#{loginPassword} + ':'"></label><input name='password' type='password' required>
 		<input type='submit' th:value='#{loginSubmit}'>
 	</form>
-	<div th:if='${param.error != null}' class='fout'>
-		<span th:text='#{wrongUsernamePassword}'></span>
-	</div>
+	<div th:if='${param.error != null}' class='error' th:text='#{wrongUsernamePassword}'></div>
 </body>
 </html>

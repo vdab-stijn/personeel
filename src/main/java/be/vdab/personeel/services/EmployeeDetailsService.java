@@ -37,13 +37,20 @@ public class EmployeeDetailsService implements UserDetailsService {
 		final Optional<Employee> employee
 		= employeeRepository.findByEmailAddress(emailAddress);
 		
-		if (!employee.isPresent()) return null;
+		if (!employee.isPresent()) {
+			LOGGER.error("SECURITY: Unable to load employee with " +
+					"e-mailaddress " + emailAddress);
+			return null;
+		}
 		
 		List<GrantedAuthority> auth = AuthorityUtils
 				.commaSeparatedStringToAuthorityList(
 						employee.get().getJobTitle().getName());
 		
-		final String password = employee.get().getPassword();
+		String password = employee.get().getPassword();
+		
+		password = password.substring("{bcrypt}".length());
+		
 		
 		LOGGER.debug("PASSWORD: " + password);
 		
