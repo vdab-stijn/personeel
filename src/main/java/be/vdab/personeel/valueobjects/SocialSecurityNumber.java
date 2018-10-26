@@ -3,6 +3,7 @@ package be.vdab.personeel.valueobjects;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 
 import javax.persistence.Transient;
 
@@ -168,7 +169,7 @@ public class SocialSecurityNumber implements Serializable {
 		
 		final SocialSecurityNumber number = (SocialSecurityNumber)object;
 		
-		return	parts.equals(number.parts);
+		return Arrays.equals(this.parts, number.parts);
 	}
 	
 	@Override

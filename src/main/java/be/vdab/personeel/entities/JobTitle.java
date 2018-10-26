@@ -1,5 +1,7 @@
 package be.vdab.personeel.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +12,10 @@ import javax.persistence.Version;
 
 @Entity
 @Table(name = "jobtitels")
-public class JobTitle {
+public class JobTitle implements Serializable {
+
+	/** Implements Serializable */
+	private static final long serialVersionUID = -4635254872941040510L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
