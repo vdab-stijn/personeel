@@ -4,12 +4,11 @@
 <body>
 	<nav th:replace='fragments::menu'></nav>
 	
-	<h1 th:text="#{ssnOf} + ' ' + ${employee.firstName} + ' ' + ${employee.lastName}"></h1>
+	<h1 th:text="#{ssnOf} + ' ' + ${socialSecurityNumberForm.employee.firstName} + ' ' + ${socialSecurityNumberForm.employee.lastName}"></h1>
 	
-	<!-- <form th:action='@{/employees/{id}/ssn(id=${employee.id})}' method='post'
-		th:object='${socialSecurityNumberForm}'> -->
-	<form th:action='@{/employees/ssn}' method='post'
-		th:object='${socialSecurityNumberForm}'>
+	<form th:action='@{/employees/ssn}' th:object='${socialSecurityNumberForm}'
+		method='post'>
+		<div th:if="${#fields.hasErrors('*')}">errors</div>
 		<label><span th:text='#{ssn}'></span>
 		<span th:if="${#fields.hasErrors('socialSecurityNumber')}" class='error'
 			th:errors='*{socialSecurityNumber}'></span>
